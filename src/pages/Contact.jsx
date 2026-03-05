@@ -8,8 +8,9 @@ export default function Contact() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        alert('Mensagem enviada com sucesso! Em breve entraremos em contato.');
+        const message = `Olá Gravitas! Meu nome é ${formData.name}. Gostaria de entrar em contato.\n\nE-mail: ${formData.email}\nTelefone: ${formData.phone}\nAssunto: ${formData.subject}\n\nMensagem: ${formData.message}`;
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/5521968815872?text=${encodedMessage}`, '_blank');
     };
 
     return (

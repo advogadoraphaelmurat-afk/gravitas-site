@@ -12,6 +12,7 @@ import BlogPost from './pages/BlogPost';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import PropertyForm from './pages/admin/PropertyForm';
+import BlogForm from './pages/admin/BlogForm';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/admin" element={<ProtectedRoute />}>
           <Route index element={<Dashboard />} />
           <Route path="imovel/:id" element={<PropertyForm />} />
+          <Route path="blog/:id" element={<BlogForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

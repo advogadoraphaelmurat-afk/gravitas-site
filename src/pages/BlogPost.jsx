@@ -1,123 +1,125 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function BlogPost() {
     const { slug } = useParams();
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // Mock content
-    const title = slug ? slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Artigo do Blog';
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        fetchPost();
+    }, [slug]);
+
+    const fetchPost = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('slug', slug)
+            .single();
+
+        if (!error && data) {
+            setPost(data);
+        }
+        setLoading(false);
+    };
+
+    const handleShare = (platform) => {
+        const url = window.location.href;
+        const text = post?.title || 'Confira este artigo no Blog da Gravitas';
+
+        const links = {
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+            twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+        };
+
+        window.open(links[platform], '_blank');
+    };
+
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center bg-light">
+            <Loader2 className="animate-spin text-primary" size={48} />
+        </div>
+    );
+
+    if (!post) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-light text-gray-500">
+            <p className="text-xl font-bold mb-4">Artigo não encontrado.</p>
+            <Link to="/blog" className="text-primary hover:underline flex items-center gap-2 font-medium">
+                <ArrowLeft size={16} /> Voltar para o Blog
+            </Link>
+        </div>
+    );
 
     return (
         <div className="bg-white min-h-screen py-10 animate-fade-in">
             <div className="container mx-auto px-4 max-w-4xl">
 
-                {/* Back Button */}
                 <Link to="/blog" className="inline-flex items-center text-gray-500 hover:text-primary transition-colors mb-8 font-medium">
                     <ArrowLeft size={16} className="mr-2" /> Voltar para o Blog
                 </Link>
 
-                {/* Article Header */}
                 <header className="mb-10 text-center">
                     <div className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider inline-block mb-6">
-                        Mercado
+                        {post.category}
                     </div>
                     <h1 className="text-3xl md:text-5xl font-bold text-dark mb-6 leading-tight">
-                        {title}
+                        {post.title}
                     </h1>
                     <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
-                        <div className="flex items-center gap-2"><User size={16} /> Por <strong>Carolina Almeida</strong></div>
-                        <div className="flex items-center gap-2"><Calendar size={16} /> 15 Março, 2026</div>
-                        <div className="flex items-center gap-2 text-primary font-medium">Leitura: 5 min</div>
+                        <div className="flex items-center gap-2"><User size={16} /> Por <strong>{post.author}</strong></div>
+                        <div className="flex items-center gap-2"><Calendar size={16} /> {new Date(post.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                     </div>
                 </header>
             </div>
 
-            {/* Featured Image */}
-            <div className="w-full max-w-5xl mx-auto mb-12 px-4">
-                <div className="aspect-[21/9] md:aspect-[21/9] w-full rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                        src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                        alt="Artigo"
-                        className="w-full h-full object-cover"
-                    />
+            {post.main_image && (
+                <div className="w-full max-w-5xl mx-auto mb-12 px-4">
+                    <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+                        <img src={post.main_image} alt={post.title} className="w-full h-full object-cover" />
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="container mx-auto px-4 max-w-3xl">
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none text-gray-700 mx-auto prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-headings:text-dark">
-                    <p className="text-xl text-gray-500 mb-8 italic border-l-4 border-primary pl-4">
-                        Descubra as técnicas de home staging e os detalhes que fazem a diferença na hora de valorizar sua propriedade no mercado de luxo.
-                    </p>
-
-                    <p>
-                        Vender um imóvel de alto padrão exige muito mais do que apenas colocá-lo à disposição no mercado.
-                        A primeira impressão é muitas vezes a única chance de capturar a atenção de um comprador exigente
-                        que busca não apenas quatro paredes, mas sim um estilo de vida e uma realização.
-                    </p>
-
-                    <h2 className="text-2xl font-bold mt-10 mb-4">1. A Arte do Home Staging</h2>
-                    <p>
-                        O <em>home staging</em> (preparação da casa) é fundamental. Trata-se de despersonalizar o ambiente
-                        para permitir que o potencial comprador se imagine vivendo ali. Cores neutras, organização impecável,
-                        e a retirada temporária de fotos familiares e coleções muito pessoais são as primeiras etapas.
-                    </p>
-
-                    <div className="my-8 rounded-xl overflow-hidden bg-gray-50 p-6 border border-gray-100">
-                        <h4 className="font-bold text-dark mb-2 flex items-center gap-2">
-                            <span className="text-primary text-xl">💡</span> Dica do especialista
-                        </h4>
-                        <p className="text-sm m-0">A iluminação é 50% da percepção do ambiente. Mantenha todas as cortinas abertas e lâmpadas de temperatura quente (2700K a 3000K) ligadas durante a visita.</p>
-                    </div>
-
-                    <h2 className="text-2xl font-bold mt-10 mb-4">2. Manutenção Impecável</h2>
-                    <p>
-                        No mercado premium, não há espaço para pequenas imperfeições. Uma torneira vazando, uma porta
-                        rangendo ou uma pintura desgastada podem comprometer a percepção de valor geral do imóvel de forma
-                        desproporcional. Invista em uma revisão completa antes de iniciar as visitas.
-                    </p>
-
-                    <h2 className="text-2xl font-bold mt-10 mb-4">3. Qualidade Audiovisual</h2>
-                    <p>
-                        Fotografias amadoras são o maior erro na divulgação de propriedades de luxo. A Gravitas Imobiliária
-                        utiliza apenas fotografia arquitetônica profissional, vídeos com drones e tours virtuais 360º para
-                        garantir que a grandiosidade da sua propriedade seja transmitida através da tela.
-                    </p>
-
-                    <blockquote className="border-l-4 border-dark bg-gray-50 p-6 my-8 italic text-lg text-dark">
-                        "A exclusividade do produto demanda uma estratégia de apresentação e venda igualmente exclusiva.
-                        O imóvel não é apenas apresentado; ele deve ser curado."
-                    </blockquote>
-                </div>
+                {/* Content */}
+                <div
+                    className="prose prose-lg max-w-none text-gray-700 mx-auto prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-headings:text-dark prose-img:rounded-xl"
+                    dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+                />
 
                 {/* Share and Tags */}
                 <div className="flex flex-col md:flex-row justify-between items-center py-8 mt-12 border-t border-b border-gray-200">
                     <div className="flex items-center gap-2 mb-4 md:mb-0">
                         <span className="text-sm font-bold text-dark uppercase tracking-wider">Tags:</span>
-                        <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-xs">Vendas</span>
-                        <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-xs">Alto Padrão</span>
+                        <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-xs">{post.category}</span>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <span className="text-sm font-bold text-dark uppercase tracking-wider flex items-center gap-2">
                             <Share2 size={16} /> Compartilhar:
                         </span>
-                        <button className="text-gray-400 hover:text-blue-600 transition-colors"><Facebook size={20} /></button>
-                        <button className="text-gray-400 hover:text-blue-400 transition-colors"><Twitter size={20} /></button>
-                        <button className="text-gray-400 hover:text-blue-700 transition-colors"><Linkedin size={20} /></button>
+                        <button onClick={() => handleShare('facebook')} className="text-gray-400 hover:text-blue-600 transition-colors"><Facebook size={20} /></button>
+                        <button onClick={() => handleShare('twitter')} className="text-gray-400 hover:text-blue-400 transition-colors"><Twitter size={20} /></button>
+                        <button onClick={() => handleShare('linkedin')} className="text-gray-400 hover:text-blue-700 transition-colors"><Linkedin size={20} /></button>
                     </div>
                 </div>
 
                 {/* Author Box */}
-                <div className="flex items-center gap-6 mt-12 bg-gray-50 p-8 rounded-xl border border-gray-100">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Carolina Almeida" className="w-20 h-20 rounded-full object-cover" />
+                <div className="flex items-center gap-6 mt-12 mb-12 bg-gray-50 p-8 rounded-xl border border-gray-100">
+                    <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold overflow-hidden shadow-md">
+                        {post.author.charAt(0)}
+                    </div>
                     <div>
-                        <h3 className="text-lg font-bold text-dark">Carolina Almeida</h3>
-                        <p className="text-sm text-primary font-medium mb-2">Especialista Lançamentos e Alto Padrão</p>
-                        <p className="text-gray-600 text-sm">Com mais de 12 anos de experiência no mercado imobiliário prime, Carolina lidera as negociações mais exclusivas da Gravitas.</p>
+                        <h3 className="text-lg font-bold text-dark">{post.author}</h3>
+                        <p className="text-sm text-primary font-medium mb-1">Autor Autorizado</p>
+                        <p className="text-gray-600 text-sm">Especialista dedicado ao mercado imobiliário de alto padrão e curadoria de conteúdo para a Gravitas.</p>
                     </div>
                 </div>
-
             </div>
         </div>
     );

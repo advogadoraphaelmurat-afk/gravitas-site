@@ -217,7 +217,12 @@ export default function PropertyDetail() {
 
                             <h4 className="text-lg font-bold mb-4">Interessou? Fale agora!</h4>
 
-                            <form className="flex flex-col gap-4 text-dark" onSubmit={(e) => e.preventDefault()}>
+                            <form className="flex flex-col gap-4 text-dark" onSubmit={(e) => {
+                                e.preventDefault();
+                                const message = `Olá, meu nome é ${formData.name}. Gostaria de agendar uma visita para o imóvel: ${property.title}. \n\nE-mail: ${formData.email}\nTelefone: ${formData.phone}\n\nMensagem: ${formData.message}`;
+                                const encodedMessage = encodeURIComponent(message);
+                                window.open(`https://wa.me/5521968815872?text=${encodedMessage}`, '_blank');
+                            }}>
                                 <input
                                     type="text"
                                     name="name"
