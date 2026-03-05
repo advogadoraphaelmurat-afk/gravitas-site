@@ -341,10 +341,10 @@ export default function PropertyForm() {
                         <Link to="/admin" className="px-5 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 transition-colors font-medium">
                             Cancelar
                         </Link>
-                        <button type="submit" disabled={saving || uploadingImage}
+                        <button type="submit" disabled={saving || uploading}
                             className="bg-primary hover:bg-red-800 text-white font-bold py-2 px-6 rounded-md transition-colors flex items-center gap-2 disabled:opacity-70">
-                            {(saving || uploadingImage) && <Loader2 size={16} className="animate-spin" />}
-                            {saving ? 'Salvando...' : uploadingImage ? 'Enviando imagem...' : isEditing ? 'Salvar alterações' : 'Publicar imóvel'}
+                            {(saving || uploading) && <Loader2 size={16} className="animate-spin" />}
+                            {saving ? 'Salvando...' : uploading ? 'Enviando imagem...' : isEditing ? 'Salvar alterações' : 'Publicar imóvel'}
                         </button>
                     </div>
                 </form>
