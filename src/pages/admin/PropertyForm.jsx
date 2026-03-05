@@ -107,8 +107,17 @@ export default function PropertyForm() {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
         const filePath = `properties/${fileName}`;
 
-        const { error } = await supabase.storage.from('property-images').upload(filePath, file);
-        if (error) throw error;
+        console.log(`Tentando upload para o bucket 'property-images': ${filePath}`);
+
+        const { error, data: uploadData } = await supabase.storage.from('property-images').upload(filePath, file);
+
+        if (error) {
+            console.error('Erro detalhado do Supabase Storage:', error);
+            if (error.message.includes('not found')) {
+                throw new Error(`O bucket 'property-images' não foi encontrado. Verifique se ele existe no Supabase Storage.`);
+            }
+            throw error;
+        }
 
         const { data } = supabase.storage.from('property-images').getPublicUrl(filePath);
         return data.publicUrl;
