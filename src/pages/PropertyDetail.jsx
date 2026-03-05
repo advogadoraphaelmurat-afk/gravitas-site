@@ -20,7 +20,7 @@ export default function PropertyDetail() {
             setActiveImage(data?.main_image || null);
             setLoading(false);
         });
-        supabase.from('properties').select('id, title, price, location, bedrooms, bathrooms, area, status, type, main_image as image')
+        supabase.from('properties').select('id, title, price, location, bedrooms, bathrooms, area, status, type, image:main_image')
             .neq('id', id).limit(3).then(({ data }) => setSimilarProperties(data || []));
     }, [id]);
 

@@ -1,0 +1,25 @@
+# Desabilita Multiviews para evitar conflitos de rotas na Locaweb
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Forçar HTTPS (Redireciona de http para https)
+  # Exclui a pasta .well-known para permitir a emissão/renovação do SSL
+  RewriteCond %{HTTPS} off
+  RewriteCond %{REQUEST_URI} !^/\.well-known [NC]
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  
+  # 2. Ignora regras para arquivos reais (fotos, css, js)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 3. Exceção para emissão de SSL (Let's Encrypt)
+  RewriteCond %{REQUEST_URI} ^/\.well-known [NC]
+  RewriteRule ^ - [L]
+
+  # 4. Redireciona tudo para o index.html (SPA logic)
+  RewriteRule ^ index.html [L]
+</IfModule>

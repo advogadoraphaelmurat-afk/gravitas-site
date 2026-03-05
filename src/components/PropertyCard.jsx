@@ -45,7 +45,7 @@ export default function PropertyCard({ property }) {
 
                 <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
                     <div className="text-xl font-bold text-primary">
-                        {property.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        {(Number(property.price) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </div>
                     <Link
                         to={`/imovel/${property.id}`}

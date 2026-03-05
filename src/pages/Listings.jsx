@@ -13,7 +13,7 @@ export default function Listings() {
         setLoading(true);
         supabase
             .from('properties')
-            .select('id, title, price, location, bedrooms, bathrooms, area, status, type, main_image as image')
+            .select('id, title, price, location, bedrooms, bathrooms, area, status, type, image:main_image')
             .order('created_at', { ascending: false })
             .then(({ data }) => {
                 setAllProperties(data || []);

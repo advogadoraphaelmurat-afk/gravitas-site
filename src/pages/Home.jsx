@@ -11,7 +11,7 @@ export default function Home() {
     useEffect(() => {
         supabase
             .from('properties')
-            .select('id, title, price, location, bedrooms, bathrooms, area, status, type, main_image as image')
+            .select('id, title, price, location, bedrooms, bathrooms, area, status, type, image:main_image')
             .order('created_at', { ascending: false })
             .limit(3)
             .then(({ data }) => { if (data) setFeaturedProperties(data); });
