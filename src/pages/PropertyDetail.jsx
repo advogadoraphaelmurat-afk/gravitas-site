@@ -257,7 +257,7 @@ export default function PropertyDetail() {
 
                             <div className="mt-4 pt-4 border-t border-white/20">
                                 <a
-                                    href="https://wa.me/5511999999999"
+                                    href="https://wa.me/5521968815872"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-md transition-colors flex items-center justify-center gap-2"
@@ -276,7 +276,7 @@ export default function PropertyDetail() {
             <div className="container mx-auto px-4 max-w-7xl pt-12 border-t border-gray-200 mt-8">
                 <h2 className="text-3xl font-bold text-dark mb-8">Imóveis Similares</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {mockProperties.slice(1, 4).map(property => (
+                    {similarProperties.map(property => (
                         <PropertyCard key={`similar-${property.id}`} property={property} />
                     ))}
                 </div>
