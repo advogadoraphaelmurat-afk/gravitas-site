@@ -24,13 +24,17 @@ export default function PropertyDetail() {
             .neq('id', id).limit(3).then(({ data }) => setSimilarProperties(data || []));
     }, [id]);
 
-    // Gallery images: use main_image first, fill with demo images
-    const gallery = property ? [
-        property.main_image,
-        'https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-        'https://images.unsplash.com/photo-1505691938895-1758d7def515?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
-    ].filter(Boolean) : [];
+    // Dynamic gallery logic: use property.images if available, otherwise fallback
+    const gallery = property ? (
+        property.images && property.images.length > 0
+            ? property.images
+            : [
+                property.main_image,
+                'https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                'https://images.unsplash.com/photo-1505691938895-1758d7def515?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+            ]
+    ).filter(Boolean) : [];
 
     const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
