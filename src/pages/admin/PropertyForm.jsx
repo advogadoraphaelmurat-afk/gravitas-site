@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Loader2, Upload, X } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, Plus } from 'lucide-react';
 
 const EMPTY_FORM = {
     title: '',
