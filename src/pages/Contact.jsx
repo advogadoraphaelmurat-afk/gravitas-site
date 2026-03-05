@@ -75,7 +75,7 @@ export default function Contact() {
                         <div className="mt-12 pt-8 border-t border-white/20 relative z-10">
                             <p className="text-lg font-bold mb-4">Prefere mensagens?</p>
                             <a
-                                href="https://wa.me/5511999999999"
+                                href="https://wa.me/5521968815872"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2"

@@ -163,20 +163,24 @@ export default function PropertyDetail() {
                             </div>
                         </div>
 
-                        {/* Video */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 p-6 md:p-8">
-                            <h2 className="text-2xl font-bold text-dark mb-6 border-b pb-4">Vídeo do Imóvel</h2>
-                            <div className="aspect-video w-full rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                                <iframe
-                                    className="w-full h-full"
-                                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" // Generic placeholder video
-                                    title="Tour Virtual"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
+                        {/* Video - Somente aparece se houver URL cadastrada */}
+                        {property.video_url && (
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 p-6 md:p-8">
+                                <h2 className="text-2xl font-bold text-dark mb-6 border-b pb-4">Vídeo do Imóvel</h2>
+                                <div className="aspect-video w-full rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                                    <iframe
+                                        className="w-full h-full"
+                                        src={property.video_url.includes('youtube.com/watch?v=')
+                                            ? property.video_url.replace('watch?v=', 'embed/')
+                                            : property.video_url}
+                                        title="Tour Virtual"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Map */}
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 p-6 md:p-8">
